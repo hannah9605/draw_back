@@ -31,20 +31,22 @@ public class DrawController {
   public HashMap<String, Object> listDraw() throws Exception {
 
     HashMap<String, Object> rtn = new HashMap<>();
-    List<DrawDomain> resultList = new ArrayList<>();
+    List<HashMap<String, Object>> resultList = new ArrayList<>();
     String result = "FAIL";
     try {
+
       DrawDomain domain = new DrawDomain();
-    }catch (SQLException e) {
-      LOG.error("■■■■■■■■■■■■■■■ 목록 요청 SQL 오류 : {}", e.getMessage());
+      resultList = this.drawRepo.LIST_DRAW(domain);
+
     } catch (Exception e) {
-      LOG.error("■■■■■■■■■■■■■■■  목록 요청 요청 오류 : {}", e.getMessage());
+      LOG.error("■■■■■■■■■■■■■■■ 목록 요청 요청 오류 : {}", e.getMessage());
     } finally {
       rtn.put("resultList", resultList);
       rtn.put("result", result);
     }
 
-
+    // 여기서 rtn을 반환해야 합니다.
+    return rtn;
   }
 
 }
