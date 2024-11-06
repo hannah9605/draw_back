@@ -5,4 +5,14 @@
     <select id="SELECT_DRAW" resultType="draw.domain.DrawDomain">
         SELECT * FROM g_draw_list
     </select>
+
+    <insert id="INSERT_DRAW" parameterType="draw.domain.DrawDomain">
+        INSERT INTO g_draw_list (file, title, reg_dt) VALUES (#{file}, #{title},  #{reg_dt, jdbcType=TIMESTAMP})
+
+    </insert>
+
+    <select id="SELECT_DRAW_BY_ID" parameterType="draw.domain.DrawDomain" >
+        SELECT * FROM draw_table WHERE id = #{seq}
+    </select>
+
 </mapper>
