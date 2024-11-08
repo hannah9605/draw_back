@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
   setterVisibility=JsonAutoDetect.Visibility.NONE, creatorVisibility= JsonAutoDetect.Visibility.NONE)
 public class DrawDomain {
 
-  @JsonProperty("seq")     private String seq = "";
+  @JsonProperty("seq")     private Integer seq ;
   @JsonProperty("title")      private String title = "";
   @Lob @JsonProperty("file")      private byte[] file ;
   @Lob @JsonProperty("fileName")      private String fileName="" ;
   @JsonProperty("reg_dt")       private LocalDateTime  reg_dt ;
-  @JsonProperty("view_cnt")       private String view_cnt = "";
-  @JsonProperty("like_cnt")       private String like_cnt = "";
+  @JsonProperty("view_cnt")       private Integer view_cnt  ;
+  @JsonProperty("like_cnt")       private Integer like_cnt ;
   private List<DrawDomain> childrenList = new ArrayList<>();
 
 

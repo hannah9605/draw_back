@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.time.LocalDateTime;
 
 @RestController
@@ -48,23 +49,42 @@ public class DrawController {
   }
 
 
-  @PostMapping("/upload")
+  @PostMapping(value = "/update", consumes = "multipart/form-data")
   public ResponseEntity<String> uploadDraw(@RequestParam("file") MultipartFile file,
-                                           @RequestParam("title") String title) {
+                                            @RequestParam(value = "title", required = false) String title,
+                                            @RequestParam(value = "seq", required = false) String seq)
+  {
     try {
-      // 파일 데이터 및 기타 정보 설정
-      DrawDomain draw = new DrawDomain();
-      draw.setFile(file.getBytes());
-      draw.setFileName(file.getOriginalFilename());
-      draw.setTitle(title);
-      draw.setReg_dt(LocalDateTime.now());
-      // 기타 정보 설정
+      DrawDomain vo = new DrawDomain();
 
-      drawRepo.INSERT_DRAW(draw); // 데이터베이스에 저장
+      vo.setFile(file.getBytes());
+      vo.setFileName(file.getOriginalFilename());
+      vo.setTitle(title);
+
+
+      if (seq == null || seq.isEmpty()) {
+        vo.setReg_dt(LocalDateTime.now());
+        drawRepo.INSERT_DRAW(vo);
+
+      }  else {
+        vo.setSeq(Integer.parseInt(seq));
+        drawRepo.UPDATE_DRAW(vo);
+
+      }
       return ResponseEntity.ok("File uploaded successfully");
     } catch (Exception e) {
       LOG.error("Failed to upload file", e);
       return ResponseEntity.status(500).body("Failed to upload file");
+    }
+  }
+
+  @PostMapping("/updateCount")
+  public ResponseEntity<String> updateViewCount(@RequestBody DrawDomain vo) {
+    try {
+      drawRepo.INCREMENT_COUNT(vo); // DrawRepo의 메서드 호출
+      return ResponseEntity.ok("View count updated");
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body("Failed to update view count");
     }
   }
 

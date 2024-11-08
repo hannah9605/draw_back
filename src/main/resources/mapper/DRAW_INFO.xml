@@ -7,12 +7,33 @@
     </select>
 
     <insert id="INSERT_DRAW" parameterType="draw.domain.DrawDomain">
-        INSERT INTO g_draw_list (file, title, reg_dt) VALUES (#{file}, #{title},  #{reg_dt, jdbcType=TIMESTAMP})
+        INSERT INTO g_draw_list (file,filename title, reg_dt) VALUES (#{file}, #{fileName} #{title},  #{reg_dt, jdbcType=TIMESTAMP})
 
     </insert>
 
     <select id="SELECT_DRAW_BY_ID" parameterType="draw.domain.DrawDomain" >
-        SELECT * FROM draw_table WHERE id = #{seq}
+        SELECT * FROM g_draw_list WHERE id = #{seq}
     </select>
+
+    <update id="UPDATE_DRAW" parameterType="draw.domain.DrawDomain">
+        UPDATE g_draw_list
+        SET filename = #{fileName},
+            file = #{file},
+            title = #{title}
+        WHERE seq = #{seq};
+    </update>
+
+    <update id="INCREMENT_COUNT" parameterType="draw.domain.DrawDomain">
+        UPDATE g_draw_list
+        <set>
+            <if test="view_cnt != null">
+                view_cnt = view_cnt + 1,
+            </if>
+            <if test="like_cnt != null">
+                like_cnt = like_cnt + 1
+            </if>
+        </set>
+        WHERE seq = #{seq}
+    </update>
 
 </mapper>
