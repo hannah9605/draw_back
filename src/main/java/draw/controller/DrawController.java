@@ -42,11 +42,6 @@ public class DrawController {
 
     return rtn; // 결과를 반환
   }
-  // ID로 데이터 조회 API 예제
-  @GetMapping("/get/{id}")
-  public DrawDomain getDrawById(@PathVariable Long id) {
-    return drawRepo.SELECT_DRAW_BY_ID(id);
-  }
 
 
   @PostMapping(value = "/update", consumes = "multipart/form-data")
