@@ -16,6 +16,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 
 @RestController
+@RequestMapping("/api")
 public class DrawController {
 
   private final DrawRepo drawRepo;
@@ -31,16 +32,16 @@ public class DrawController {
     List<DrawDomain> domainList;
 
     try {
-      domainList = this.drawRepo.SELECT_DRAW(); // SELECT_DRAW 호출
+      domainList = this.drawRepo.SELECT_DRAW();
       result = "success";
-      rtn.put("data", domainList); // 결과 데이터를 리스트로 추가
+      rtn.put("data", domainList);
     } catch (Exception e) {
       LOG.error("Failed to fetch draws", e);
     } finally {
-      rtn.put("result", result); // 결과 메시지를 추가
+      rtn.put("result", result);
     }
 
-    return rtn; // 결과를 반환
+    return rtn;
   }
 
 
@@ -76,7 +77,7 @@ public class DrawController {
   @PostMapping("/updateCount")
   public ResponseEntity<String> updateViewCount(@RequestBody DrawDomain vo) {
     try {
-      drawRepo.INCREMENT_COUNT(vo); // DrawRepo의 메서드 호출
+      drawRepo.INCREMENT_COUNT(vo);
       return ResponseEntity.ok("View count updated");
     } catch (Exception e) {
       return ResponseEntity.status(500).body("Failed to update view count");

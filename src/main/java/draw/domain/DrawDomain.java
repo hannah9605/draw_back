@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class DrawDomain {
 
   @JsonProperty("seq")     private Integer seq ;
-  @JsonProperty("title")      private String title = "";
+  @JsonProperty("title")      private String title ;
   @Lob @JsonProperty("file")      private byte[] file ;
-  @Lob @JsonProperty("fileName")      private String fileName="" ;
+  @JsonProperty("fileName")      private String fileName ;
   @JsonProperty("reg_dt")       private LocalDateTime  reg_dt ;
   @JsonProperty("view_cnt")       private Integer view_cnt  ;
   @JsonProperty("like_cnt")       private Integer like_cnt ;
