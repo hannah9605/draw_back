@@ -100,6 +100,12 @@ public class DrawController {
       DrawDomain resultList = drawRepo.SELECT_DRAW_BY_ID(seq);
       if (resultList != null) {
         result = "success";
+        String fileName = resultList.getFileName();
+        if (fileName != null && fileName.contains(".")) {
+          String type = fileName.substring(fileName.lastIndexOf(".") + 1);
+          resultList.setType(type);
+        }
+
         rtn.put("data", resultList);
       } else {
         rtn.put("data", null);
