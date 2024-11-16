@@ -18,13 +18,13 @@ public class DrawDomain {
 
   @JsonProperty("seq")     private Integer seq ;
   @JsonProperty("title")      private String title ;
+  @JsonProperty("fileData")      private String fileData ;
   @Lob @JsonProperty("file")      private byte[] file ;
   @JsonProperty("fileName")      private String fileName ;
   @JsonProperty("type")         private String type ;
   @JsonProperty("reg_dt")       private LocalDateTime  reg_dt ;
   @JsonProperty("view_cnt")       private Integer view_cnt  ;
   @JsonProperty("like_cnt")       private Integer like_cnt ;
-  private List<DrawDomain> childrenList = new ArrayList<>();
 
 
 }

@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -27,23 +26,38 @@ public class DrawController {
   }
 
   @GetMapping("/draws")
-  public HashMap<String, Object> selectDraw() {
+  public HashMap<String, Object> selectDraw(
+    @RequestParam(value = "page", defaultValue = "1") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+
+  ) {
     String result = "fail";
     HashMap<String, Object> rtn = new HashMap<>();
     List<DrawDomain> resultList;
 
     try {
+
+      int offset = (page - 1) * size;
+      int limit = size;
+
       resultList = this.drawRepo.SELECT_DRAW();
+      List<DrawDomain> paginatedList = resultList.stream()
+        .skip(offset)
+        .limit(limit)
+        .collect(Collectors.toList());
+
       result = "success";
 
-      for (DrawDomain draw : resultList) {
+      for (DrawDomain draw : paginatedList) {
         String fileName = draw.getFileName();
         if (fileName != null && fileName.contains(".")) {
           String type = fileName.substring(fileName.lastIndexOf(".") + 1);
           draw.setType(type);
         }
       }
-      rtn.put("data", resultList);
+      rtn.put("data", paginatedList);
+      rtn.put("currentPage", page);
+      rtn.put("pageSize", size);
     } catch (Exception e) {
       LOG.error("Failed to fetch draws", e);
     } finally {
