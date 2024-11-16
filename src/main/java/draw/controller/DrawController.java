@@ -21,6 +21,7 @@ public class DrawController {
 
   private final DrawRepo drawRepo;
   private static final Logger LOG = LoggerFactory.getLogger(FileUpload.class);
+
   public DrawController(DrawRepo drawRepo) {
     this.drawRepo = drawRepo;
   }
@@ -29,12 +30,20 @@ public class DrawController {
   public HashMap<String, Object> selectDraw() {
     String result = "fail";
     HashMap<String, Object> rtn = new HashMap<>();
-    List<DrawDomain> domainList;
+    List<DrawDomain> resultList;
 
     try {
-      domainList = this.drawRepo.SELECT_DRAW();
+      resultList = this.drawRepo.SELECT_DRAW();
       result = "success";
-      rtn.put("data", domainList);
+
+      for (DrawDomain draw : resultList) {
+        String fileName = draw.getFileName();
+        if (fileName != null && fileName.contains(".")) {
+          String type = fileName.substring(fileName.lastIndexOf(".") + 1);
+          draw.setType(type);
+        }
+      }
+      rtn.put("data", resultList);
     } catch (Exception e) {
       LOG.error("Failed to fetch draws", e);
     } finally {
@@ -47,9 +56,8 @@ public class DrawController {
 
   @PostMapping(value = "/update", consumes = "multipart/form-data")
   public ResponseEntity<String> uploadDraw(@RequestParam("file") MultipartFile file,
-                                            @RequestParam(value = "title", required = false) String title,
-                                            @RequestParam(value = "seq", required = false) String seq)
-  {
+                                           @RequestParam(value = "title") String title,
+                                           @RequestParam(value = "seq", required = false) String seq) {
     try {
       DrawDomain vo = new DrawDomain();
 
@@ -62,7 +70,7 @@ public class DrawController {
         vo.setReg_dt(LocalDateTime.now());
         drawRepo.INSERT_DRAW(vo);
 
-      }  else {
+      } else {
         vo.setSeq(Integer.parseInt(seq));
         drawRepo.UPDATE_DRAW(vo);
 
@@ -83,5 +91,25 @@ public class DrawController {
       return ResponseEntity.status(500).body("Failed to update view count");
     }
   }
+  @GetMapping("/draws/{seq}")
+  public HashMap<String, Object> selectDraw(@PathVariable Long seq) {
+    String result = "fail";
+    HashMap<String, Object> rtn = new HashMap<>();
 
+    try {
+      DrawDomain resultList = drawRepo.SELECT_DRAW_BY_ID(seq);
+      if (resultList != null) {
+        result = "success";
+        rtn.put("data", resultList);
+      } else {
+        rtn.put("data", null);
+      }
+    } catch (Exception e) {
+      LOG.error("Failed to fetch draws by seq", e);
+      rtn.put("data", null);
+    }
+    rtn.put("result", result);
+
+    return rtn;
+  }
 }
